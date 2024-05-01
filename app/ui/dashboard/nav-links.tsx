@@ -1,27 +1,11 @@
 "use client";
 
-/* import {
-	UserGroupIcon,
-	HomeIcon,
-	DocumentDuplicateIcon,
-} from "@heroicons/react/24/outline"; */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Chest, Demon, Feather, Swords, WizardHat } from "./icons";
 
 // Map of links to display in the side navigation.
-// Depending on the size of the application, this would be stored in a database.
-/* const links = [
-	{ name: "Home", href: "/dashboard", icon: HomeIcon },
-	{
-		name: "Invoices",
-		href: "/dashboard/invoices",
-		icon: DocumentDuplicateIcon,
-	},
-	{ name: "Customers", href: "/dashboard/customers", icon: UserGroupIcon },
-]; */
-
 const links = [
 	{
 		name: "Home",
@@ -68,15 +52,6 @@ export default function NavLinks() {
 							}
 						)}
 					>
-						{/* <Image
-							src={link.icon}
-							alt="feather"
-							width={16}
-							height={16}
-							className="text-white"
-						/> */}
-
-						{/* <LinkIcon className="w-6 h-6 " /> */}
 						<LinkIcon className="w-7 h-7" />
 						<p className="hidden md:block">{link.name}</p>
 					</Link>
