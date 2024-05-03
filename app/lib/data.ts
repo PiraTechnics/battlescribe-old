@@ -2,7 +2,6 @@
 //"use server";
 
 import Monster from "@/models/Monster";
-//import dbConnect from "./db";
 
 /* export async function fetchMonster(name: string) {
 	try {
