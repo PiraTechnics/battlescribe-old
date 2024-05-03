@@ -23,3 +23,7 @@ export async function fetchMonster(name: string) {
 		console.log(error);
 	}
 }
+
+export const legendaryDesc = (name: string, amount: number = 3) => {
+	return `The ${name} can take ${amount} legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The ${name} regains spent legendary actions at the start of its turn.`;
+};

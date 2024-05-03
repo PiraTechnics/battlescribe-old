@@ -7,7 +7,7 @@ export default function Page() {
 		<main>
 			<h1 className="mb-4 text-xl md:text-2xl">Monster Info</h1>
 			<Suspense>
-				<MonsterCard />
+				<MonsterCard index={"zombie"} />
 			</Suspense>
 		</main>
 	);

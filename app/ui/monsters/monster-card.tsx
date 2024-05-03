@@ -1,4 +1,4 @@
-import { fetchMonster } from "@/app/lib/data";
+import { fetchMonster, legendaryDesc } from "@/app/lib/data";
 import { challengeRatingXP } from "@/app/lib/5eTables";
 import React from "react";
 
@@ -6,7 +6,34 @@ import React from "react";
 	[key: string]: string;
 }; */
 
+interface MonsterCardProps {
+	index: string;
+}
+
 //TODO: replace react key hardcoding with uuids
+
+//TODO: move types to own file
+type monsterAction = {
+	name: string;
+	desc: string;
+	attack_bonus: number;
+	damage: [
+		{
+			damage_type: {
+				index: string;
+				name: string;
+				url: string;
+			};
+			damage_dice: string;
+		}
+	];
+};
+
+type monsterAbility = {
+	name: string;
+	desc: string;
+	//Add spellcasting and other long-form options
+};
 
 type monsterProficiency = {
 	value: number;
@@ -31,8 +58,8 @@ type monsterConditionImmunity = {
 	url: string;
 };
 
+//TODO: refactor utility functions into own file
 const capitalize = (string: string) => {
-	console.log(string);
 	return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
@@ -46,14 +73,17 @@ const commaSeparatedList = (array: Array<string>) => {
 	return string;
 };
 
+const abbreviatedName = (name: string) => {
+	const nameArr = name.split(" ");
+	return nameArr[nameArr.length - 1];
+};
+
 const formatDamageTypeModifiers = (modifiers: Array<string>) => {
 	let formattedMods: Array<string> = [];
 	modifiers.forEach((entry) => {
 		formattedMods.push(capitalize(entry));
-		console.log(entry);
 	});
 
-	console.log(formattedMods);
 	return formattedMods;
 };
 
@@ -69,13 +99,11 @@ const formatConditionImmunities = (
 };
 
 const formatSenses = (senses: monsterSenses) => {
-	//console.log(senses);
 	let formattedSenses: Array<string> = [];
 	const sensesArray = Object.entries(senses);
 
 	sensesArray.forEach((entry) => {
 		const senseName = capitalize(entry[0]).replace("_", " ");
-
 		const senseVal = entry[1].toString();
 		formattedSenses.push(`${senseName} ${senseVal}`);
 	});
@@ -112,8 +140,8 @@ const formatProficiencyModifier = (value: number) => {
 	return value >= 0 ? `+${value}` : value;
 };
 
-export default async function MonsterCard() {
-	const monster = await fetchMonster("lich");
+export default async function MonsterCard({ index }: MonsterCardProps) {
+	const monster = await fetchMonster(index);
 
 	if (!monster) {
 		return <p className="mt-4 text-gray-400">No data available.</p>;
@@ -286,11 +314,41 @@ export default async function MonsterCard() {
 					<span>{formatChallengeRating(monster.challenge_rating)}</span>
 				</div>
 			</section>
-			<section id="special-abilities"></section>
-			<section id="actions"></section>
-			<section id="bonus-actions"></section>
-			<section id="reactions"></section>
-			<section id="legendary-actions"></section>
+			{monster.special_abilities.length > 0 && (
+				<section id="special-abilities">
+					{monster.special_abilities.map((entry: monsterAbility) => (
+						<div key={monster.index + entry.name} className="mb-2">
+							<span className="font-semibold italic">{entry.name}. </span>
+							<span>{entry.desc}</span>
+						</div>
+					))}
+				</section>
+			)}
+			{monster.actions.length > 0 && (
+				<section id="actions">
+					{monster.actions.map((entry: monsterAction) => (
+						<div key={monster.index + entry.name} className="mb-2">
+							<span className="font-semibold italic">{entry.name}. </span>
+							<span>{entry.desc}</span>
+						</div>
+					))}
+				</section>
+			)}
+
+			{monster.legendary_actions && (
+				<section id="legendary-actions">
+					<div className="mt-2 mb-4">
+						<h4 className="text-xl font-semibold">Legendary Actions</h4>
+						<p>{legendaryDesc(abbreviatedName(monster.name.toLowerCase()))}</p>
+					</div>
+					{monster.legendary_actions.map((entry: monsterAction) => (
+						<div key={monster.index + entry.name} className="mb-2">
+							<span className="font-semibold italic">{entry.name}. </span>
+							<span>{entry.desc}</span>
+						</div>
+					))}
+				</section>
+			)}
 		</article>
 	);
 }
