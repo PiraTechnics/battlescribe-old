@@ -1,6 +1,22 @@
 import { fetchMonster, legendaryDesc } from "@/app/lib/data";
-import { challengeRatingXP } from "@/app/lib/5eTables";
 import React from "react";
+import {
+	abbreviatedName,
+	capitalize,
+	commaSeparatedList,
+	formatAbilityModifier,
+	formatChallengeRating,
+	formatConditionImmunities,
+	formatDamageTypeModifiers,
+	formatProficiencyModifier,
+	formatSenses,
+	getXPfromCR,
+} from "@/app/lib/utils";
+import {
+	monsterProficiency,
+	monsterAbility,
+	monsterAction,
+} from "@/app/lib/definitions";
 
 /* type speedList = {
 	[key: string]: string;
@@ -13,132 +29,6 @@ interface MonsterCardProps {
 //TODO: replace react key hardcoding with uuids
 
 //TODO: move types to own file
-type monsterAction = {
-	name: string;
-	desc: string;
-	attack_bonus: number;
-	damage: [
-		{
-			damage_type: {
-				index: string;
-				name: string;
-				url: string;
-			};
-			damage_dice: string;
-		}
-	];
-};
-
-type monsterAbility = {
-	name: string;
-	desc: string;
-	//Add spellcasting and other long-form options
-};
-
-type monsterProficiency = {
-	value: number;
-	proficiency: {
-		index: string;
-		name: string;
-		url: string;
-	};
-};
-
-type monsterSenses = {
-	passive_perception: number;
-	darkvision?: string;
-	blindsight?: string;
-	tremorsense?: string;
-	truesight?: string;
-};
-
-type monsterConditionImmunity = {
-	index: string;
-	name: string;
-	url: string;
-};
-
-//TODO: refactor utility functions into own file
-const capitalize = (string: string) => {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-const commaSeparatedList = (array: Array<string>) => {
-	let string = "";
-	array.forEach((entry, i) => {
-		string += entry;
-		if (i + 1 !== array.length) string += ", ";
-	});
-
-	return string;
-};
-
-const abbreviatedName = (name: string) => {
-	const nameArr = name.split(" ");
-	return nameArr[nameArr.length - 1];
-};
-
-const formatDamageTypeModifiers = (modifiers: Array<string>) => {
-	let formattedMods: Array<string> = [];
-	modifiers.forEach((entry) => {
-		formattedMods.push(capitalize(entry));
-	});
-
-	return formattedMods;
-};
-
-const formatConditionImmunities = (
-	conditions: Array<monsterConditionImmunity>
-) => {
-	let formattedImmunities: Array<string> = [];
-	conditions.forEach((entry) => {
-		formattedImmunities.push(entry.name);
-	});
-
-	return formattedImmunities;
-};
-
-const formatSenses = (senses: monsterSenses) => {
-	let formattedSenses: Array<string> = [];
-	const sensesArray = Object.entries(senses);
-
-	sensesArray.forEach((entry) => {
-		const senseName = capitalize(entry[0]).replace("_", " ");
-		const senseVal = entry[1].toString();
-		formattedSenses.push(`${senseName} ${senseVal}`);
-	});
-
-	return formattedSenses;
-};
-
-const formatChallengeRating = (cr: number) => {
-	let key;
-
-	if (cr > 30 || cr < 0) {
-		throw Error("Invalid Challenge Rating");
-	}
-
-	//convert cr to string
-	if (cr === 0.2) key = "1/8";
-	else if (cr === 0.25) key = "1/4";
-	else if (cr === 0.5) key = "1/2";
-	else key = cr.toString();
-
-	const xp = challengeRatingXP.find((entry) => entry.cr === key);
-	return `${xp?.cr} (${xp?.xp} XP)`;
-};
-
-const formatAbilityModifier = (score: number) => {
-	if (!score || score > 30 || score < 0) {
-		throw new Error("Invalid Ability Score"); //TODO: properly catch this somewhere
-	}
-	const result = Math.floor((score - 10) / 2);
-	return `(${result >= 0 ? "+" : ""}${result})`;
-};
-
-const formatProficiencyModifier = (value: number) => {
-	return value >= 0 ? `+${value}` : value;
-};
 
 export default async function MonsterCard({ index }: MonsterCardProps) {
 	const monster = await fetchMonster(index);
@@ -311,10 +201,12 @@ export default async function MonsterCard({ index }: MonsterCardProps) {
 				</div>
 				<div id="challenge-rating" className="flex gap-1">
 					<span className="font-bold">Challenge</span>
-					<span>{formatChallengeRating(monster.challenge_rating)}</span>
+					<span>{`${formatChallengeRating(
+						monster.challenge_rating
+					)} ${getXPfromCR(monster.challenge_rating)}`}</span>
 				</div>
 			</section>
-			{monster.special_abilities.length > 0 && (
+			{monster.special_abilities && monster.special_abilities.length > 0 && (
 				<section id="special-abilities">
 					{monster.special_abilities.map((entry: monsterAbility) => (
 						<div key={monster.index + entry.name} className="mb-2">
