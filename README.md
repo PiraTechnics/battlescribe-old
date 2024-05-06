@@ -1,41 +1,25 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# BattleScribe - A Better Tabletop Combat Tracker
 
-## Getting Started
+## Development setup
 
-First, run the development server:
+This project sources D&D 5e's Basic rules by way of the 5th edition SRD Database. The DB can be found here: https://github.com/5e-bits/5e-database
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+In order to develop locally, this db must be built and running on the local machine, or on an acessible server. Run the following to download, instantiate and populate the db for local development:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Install mongodb community edition (if not already installed): https://www.mongodb.com/docs/manual/installation/
+2. setup local path and instiatiate db (Linux):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`mkdir ~/data/db && sudo mongod --dbpath=~/data/db`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. Clone 5e SRD db repository and run script to populate database:
 
-## Learn More
+` git clone https://github.com/5e-bits/5e-database  && cd 5e-database && npm install`
+` MONGODB_URI=mongodb://localhost/5e-database npm run db:refresh`
 
-To learn more about Next.js, take a look at the following resources:
+4. Create .env file in BattleScribe root folder and add MongodDB url string:
+   `cd battlescribe/ && echo "DB_STRING='mongodb://localhost/5e-database" > .env`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Install npm dependencies and run in dev mode
+   `npm install && npm run dev`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-### Development Deps
-
-before running, start local mongodb instance:
-`sudo mongod --dbpath ~/data/db`
+and that's it! Before running locally each time, ensure mongod is running and pointed to the corred db path
