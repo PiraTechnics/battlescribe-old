@@ -20,7 +20,11 @@ export const abbreviatedName = (name: string) => {
 	return nameArr[nameArr.length - 1];
 };
 
-export const getXPfromCR = (cr: number) => {
+export const formatXP = (xp: number) => {
+	return `(${xp.toString()} XP)`;
+};
+
+/* export const getXPfromCR = (cr: number) => {
 	let key;
 
 	if (cr > 30 || cr < 0) {
@@ -35,7 +39,7 @@ export const getXPfromCR = (cr: number) => {
 
 	const xp = challengeRatingXP.find((entry) => entry.cr === key);
 	return `(${xp?.xp} XP)`;
-};
+}; */
 
 export const formatChallengeRating = (cr: number) => {
 	if (cr > 30 || cr < 0) {
@@ -47,6 +51,11 @@ export const formatChallengeRating = (cr: number) => {
 	else if (cr === 0.25) return "1/4";
 	else if (cr === 0.5) return "1/2";
 	else return cr.toString();
+};
+
+export const formatSpellcastingList = (spellcasting: string) => {
+	//TODO: format from '-' separated values
+	//return as array?
 };
 
 export const formatDamageTypeModifiers = (modifiers: Array<string>) => {

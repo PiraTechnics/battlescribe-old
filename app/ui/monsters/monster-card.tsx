@@ -10,7 +10,7 @@ import {
 	formatDamageTypeModifiers,
 	formatProficiencyModifier,
 	formatSenses,
-	getXPfromCR,
+	formatXP,
 } from "@/app/lib/utils";
 import {
 	monsterProficiency,
@@ -201,9 +201,9 @@ export default async function MonsterCard({ index }: MonsterCardProps) {
 				</div>
 				<div id="challenge-rating" className="flex gap-1">
 					<span className="font-bold">Challenge</span>
-					<span>{`${formatChallengeRating(
-						monster.challenge_rating
-					)} ${getXPfromCR(monster.challenge_rating)}`}</span>
+					<span>{`${formatChallengeRating(monster.challenge_rating)} ${formatXP(
+						monster.xp
+					)}`}</span>
 				</div>
 			</section>
 			{monster.special_abilities && monster.special_abilities.length > 0 && (
