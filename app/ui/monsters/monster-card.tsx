@@ -27,7 +27,6 @@ interface MonsterCardProps {
 }
 
 //TODO: replace react key hardcoding with uuids
-
 //TODO: move types to own file
 
 export default async function MonsterCard({ index }: MonsterCardProps) {

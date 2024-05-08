@@ -9,7 +9,7 @@ In order to develop locally, this db must be built and running on the local mach
 1. Install mongodb community edition (if not already installed): https://www.mongodb.com/docs/manual/installation/
 2. setup local path and instiatiate db (Linux):
 
-`mkdir ~/data/db && sudo mongod --dbpath=~/data/db`
+`mkdir ~/data/db && sudo mongod --dbpath=data/db`
 
 3. Clone 5e SRD db repository and run script to populate database:
 

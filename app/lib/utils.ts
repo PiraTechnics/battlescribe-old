@@ -20,6 +20,8 @@ export const abbreviatedName = (name: string) => {
 	return nameArr[nameArr.length - 1];
 };
 
+export const formatArmorDesc = (armor: string) => {};
+
 export const formatXP = (xp: number) => {
 	return `(${xp.toString()} XP)`;
 };
